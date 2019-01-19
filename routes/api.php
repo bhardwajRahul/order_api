@@ -16,3 +16,12 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// List All Orders
+Route::get('orders','OrderController@index');
+
+//Create New Order
+Route::post('orders','OrderController@store');
+
+//Update Existing Order Status
+Route::patch('orders/{id}','OrderController@update');
