@@ -3,26 +3,35 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests;
 use App\Order;
 use App\Http\Resources\Order as OrderResource;
 use App\DistanceApi\Api\Request as Api;
 
-class OrderController extends Controller
-{
+class OrderController extends Controller {
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
-    {
+    public function index(Request $request) {
         //Get Orders
         $page = $request->query('page');
         $limit = $request->query('limit');
-    
-        $orders = Order::all();
-        return response()->json($orders,200);
+        $begin = ($page * $limit) - $limit;
+
+        $orders = DB::table('orders')
+                ->offset($begin)
+                ->limit($limit)
+                ->get();
+
+        if (count($orders) > 0) {
+            return response()->json($orders, 200);
+        } else {
+            return response()->json(["error" => "Data Not Found"], 404);
+        }
     }
 
     /**
@@ -31,25 +40,28 @@ class OrderController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         //Creating a New Order
         $order = new Order;
 
-         //$origin = $request->input('origin');
-        // $destination = $request->input('destination');
+        $validatedData = $request->validate([
+            "origin" => "required | array",
+            "destination" => "required | array",
+        ]);
 
-        $order->distance = Api::calculateDistance($request->input());
-        
+        $order->distance = Api::calculateDistance($validatedData);
+
         if (ctype_digit(strval($order->distance))) {
             if ($order->save()) {
-                return response()->json($order, 201);
-            } 
+                return response()->json([
+                            'id' => $order->id,
+                            'distance' => $order->distance,
+                            'status' => $order->status,
+                                ], 200);
+            }
         }
-        return response()->json(["error"=> $order->distance], 403);
-
+        return response()->json(["error" => $order->distance], 403);
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -58,23 +70,21 @@ class OrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         $order = Order::findorFail($id);
 
         $validatedData = $request->validate([
-            'status' => 'required| alpha | in:TAKEN',
-        ]); 
-        
-        if ($order->status !== "TAKEN") {
+            'status' => 'required | alpha | in:TAKEN',
+        ]);
 
-            $order->status = strtoupper($request->input('status'));
+        if ($order->status !== "ASSIGNED") {
+            $order->status = 'ASSIGNED';
+
             if ($order->save()) {
-                return response()->json(["status"=> "SUCCESS"], 200);
+                return response()->json(["status" => "SUCCESS"], 200);
             }
-        } 
-        return response()->json(["error"=> "Order Already been Taken"], 409);
-        
+        }
+        return response()->json(["error" => "Already Assigned"], 409);
     }
 
 }

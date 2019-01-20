@@ -4,8 +4,7 @@ namespace App\Traits;
 
 use Illuminate\Http\Request;
 
-trait RestTrait
-{
+trait RestTrait {
 
     /**
      * Determines if request is an api call.
@@ -15,8 +14,7 @@ trait RestTrait
      * @param Request $request
      * @return bool
      */
-    protected function isApiCall(Request $request)
-    {
+    protected function isApiCall(Request $request) {
         return strpos($request->getUri(), '/api/') !== false;
     }
 

@@ -6,8 +6,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-trait RestExceptionHandlerTrait
-{
+trait RestExceptionHandlerTrait {
 
     /**
      * Creates a new JSON response based on exception type.
@@ -16,9 +15,8 @@ trait RestExceptionHandlerTrait
      * @param Exception $e
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function getJsonResponseForException(Request $request, Exception $e)
-    {
-        switch(true) {
+    protected function getJsonResponseForException(Request $request, Exception $e) {
+        switch (true) {
             case $this->isModelNotFoundException($e):
                 $retval = $this->modelNotFound();
                 break;
@@ -36,8 +34,7 @@ trait RestExceptionHandlerTrait
      * @param int $statusCode
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function badRequest($message='Bad request', $statusCode=400)
-    {
+    protected function badRequest($message = 'Bad request', $statusCode = 400) {
         return $this->jsonResponse(['error' => $message], $statusCode);
     }
 
@@ -48,8 +45,7 @@ trait RestExceptionHandlerTrait
      * @param int $statusCode
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function modelNotFound($message='Record not found', $statusCode=404)
-    {
+    protected function modelNotFound($message = 'Record not found', $statusCode = 404) {
         return $this->jsonResponse(['error' => $message], $statusCode);
     }
 
@@ -60,8 +56,7 @@ trait RestExceptionHandlerTrait
      * @param int $statusCode
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function jsonResponse(array $payload=null, $statusCode=404)
-    {
+    protected function jsonResponse(array $payload = null, $statusCode = 404) {
         $payload = $payload ?: [];
 
         return response()->json($payload, $statusCode);
@@ -73,8 +68,7 @@ trait RestExceptionHandlerTrait
      * @param Exception $e
      * @return bool
      */
-    protected function isModelNotFoundException(Exception $e)
-    {
+    protected function isModelNotFoundException(Exception $e) {
         return $e instanceof ModelNotFoundException;
     }
 
