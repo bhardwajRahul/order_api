@@ -1,10 +1,10 @@
 #!/bin/bash
 
-docker-compose down
+docker-compose down 
 
 docker-compose up -d --force-recreate
 
-docker run --rm -v $(pwd):/app composer install
+#docker run --rm -v $(pwd):/app composer install
 
 docker-compose exec app php artisan key:generate
 
@@ -26,6 +26,6 @@ fi
 
 docker-compose exec app php artisan migrate
 
-docker run -v $(pwd):/app --rm nielsvdoorn/laravel-phpunit:latest ./vendor/bin/phpunit --configuration phpunit.xml tests
+docker-compose exec app ./vendor/bin/phpunit --configuration phpunit.xml tests
 
 >&2 echo "Your application back end is now ready to serve APIs"
