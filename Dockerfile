@@ -11,12 +11,8 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     apt-utils \
     mysql-client \
-    libpng-dev \
-    libjpeg62-turbo-dev \
-    libfreetype6-dev \
     locales \
     zip \
-    jpegoptim optipng pngquant gifsicle \
     vim \
     unzip \
     git \
@@ -28,7 +24,7 @@ RUN docker-php-ext-install pdo pdo_mysql
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install extensions
-#RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Add user for laravel application
 RUN groupadd -g 1000 www

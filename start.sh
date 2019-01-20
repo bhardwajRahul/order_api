@@ -17,7 +17,7 @@ BUILD_DIR=$WORKING_DIR/vendor
 if [ -d $BUILD_DIR ]; then
 	sleep 1s
 else
-    >&2 echo "MySql might require some time to start as you are setting up App for first time "
+    >&2 echo "MySql might require some time to start as you are setting up App for the first time "
     sleep 240s
 fi
 
