@@ -4,7 +4,7 @@ docker-compose down
 
 docker-compose up -d --force-recreate
 
-#docker run --rm -v $(pwd):/app composer install
+docker run --rm -v $(pwd):/app composer install
 
 docker-compose exec app php artisan key:generate
 
