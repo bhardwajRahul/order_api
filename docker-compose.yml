@@ -2,6 +2,24 @@ version: '3'
 
 services:
 
+  # MySql Service
+  db:
+    image: mysql:5.7
+    container_name: db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_ROOT_PASSWORD: root
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - dbdata:/var/lib/mysql/
+    networks:
+      - app-network
+
   # Application Container
   app:
     image: order_api/php
@@ -34,27 +52,6 @@ services:
     networks:
       - app-network
 
-  # MySql Service
-  db:
-    image: mysql:latest
-    container_name: db
-    restart: unless-stopped
-    tty: true
-    security_opt:
-     - seccomp:unconfined
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_DATABASE: laravel
-      MYSQL_ROOT_PASSWORD: root
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
-    volumes:
-      - dbdata:/var/lib/mysql/
-      #- ./mysql/my.cnf:/etc/mysql/my.cnf
-    networks:
-      - app-network
-  
 # Docker Networks
 networks:
   app-network:
