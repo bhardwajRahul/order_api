@@ -30,7 +30,7 @@ class OrderController extends Controller {
         if (count($orders) > 0) {
             return response()->json($orders, 200);
         } else {
-            return response()->json(["error" => "Data Not Found"], 404);
+            return response()->json(["error" => "Record not found"], 404);
         }
     }
 
