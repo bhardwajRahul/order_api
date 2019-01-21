@@ -28,6 +28,7 @@ if [ "$WAIT" == "true" ]; then
 
 else
     docker-compose exec app php artisan config:clear
+    docker-compose exec app php artisan migrate:fresh
     sleep 1s
     
 fi

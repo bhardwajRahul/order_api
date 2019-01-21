@@ -11,9 +11,8 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
   | Request Class
   |--------------------------------------------------------------------------
   |
-  | This class is used when querying your API.
+  | This class is used when querying your Google Distance API.
   |
-  | * Class is called via the Facade 'Api'
   | * E.g. Api::getDistance('api');
   |
  */
@@ -79,6 +78,7 @@ class Request {
      */
     public static function calculateDistance($data) {
         try {
+
             $data = array_map(function($v) {
                 return implode(',', (array) $v);
             }, $data);

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Requests;
 use App\Order;
 use App\Http\Resources\Order as OrderResource;
@@ -18,14 +17,17 @@ class OrderController extends Controller {
      */
     public function index(Request $request) {
         //Get Orders
+
+        $validatedData = $request->validate([
+            "page" => "required ",
+            "limit" => "required ",
+        ]);
+
         $page = $request->query('page');
         $limit = $request->query('limit');
         $begin = ($page * $limit) - $limit;
 
-        $orders = DB::table('orders')
-                ->offset($begin)
-                ->limit($limit)
-                ->get();
+        $orders = Order::geters($begin, $limit);
 
         if (count($orders) > 0) {
             return response()->json($orders, 200);
@@ -52,6 +54,10 @@ class OrderController extends Controller {
         $order->distance = Api::calculateDistance($validatedData);
 
         if (ctype_digit(strval($order->distance))) {
+
+            $order->origin_id = Order::saveOrderOrigin($validatedData['origin']);
+            $order->destination_id = Order::saveOrderDestination($validatedData['destination']);
+
             if ($order->save()) {
                 return response()->json([
                             'id' => $order->id,
@@ -84,7 +90,7 @@ class OrderController extends Controller {
                 return response()->json(["status" => "SUCCESS"], 200);
             }
         }
-        return response()->json(["error" => "Already Assigned"], 409);
+        return response()->json(["error" => "ORDER ALREADY BEEN TAKEN"], 409);
     }
 
 }

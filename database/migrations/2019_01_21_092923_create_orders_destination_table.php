@@ -4,19 +4,18 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateOrdersTable extends Migration
-{
+class CreateOrdersDestinationTable extends Migration {
+
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::create('orders', function (Blueprint $table) {
+    public function up() {
+        Schema::create('orders_destination', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('distance');
-            $table->string('status');
+            $table->float('latitude');
+            $table->float('longitude');
         });
     }
 
@@ -25,8 +24,8 @@ class CreateOrdersTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
-        Schema::dropIfExists('orders');
+    public function down() {
+        Schema::dropIfExists('orders_destination');
     }
+
 }
