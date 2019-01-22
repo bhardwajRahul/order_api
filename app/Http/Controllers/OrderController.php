@@ -27,7 +27,7 @@ class OrderController extends Controller {
         $limit = $request->query('limit');
         $begin = ($page * $limit) - $limit;
 
-        $orders = Order::geters($begin, $limit);
+        $orders = Order::getOrders($begin, $limit);
 
         if (count($orders) > 0) {
             return response()->json($orders, 200);
